@@ -22,25 +22,25 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   wahllokal1:
-    image: wahllokal  # Dein Wahllokal-Docker-Image verwenden
+    image: wahllokal
     ports:
-      - "8081:4200"   # Lokales Port-Mapping (Wahllokal 1 auf Port 8081)
+      - "8081:4200"
     environment:
-      SERVER_PORT: 4200  # Port innerhalb des Containers
+      SERVER_PORT: 4200
       SPRING_PROFILES_ACTIVE: wahllokal1
 
   wahllokal2:
-    image: wahllokal  # Dein Wahllokal-Docker-Image verwenden
+    image: wahllokal
     ports:
-      - "8082:4200"   # Lokales Port-Mapping (Wahllokal 2 auf Port 8082)
+      - "8082:4200"
     environment:
       SERVER_PORT: 4200
       SPRING_PROFILES_ACTIVE: wahllokal2
 
   wahllokal3:
-    image: wahllokal  # Dein Wahllokal-Docker-Image verwenden
+    image: wahllokal
     ports:
-      - "8083:4200"   # Lokales Port-Mapping (Wahllokal 3 auf Port 8083)
+      - "8083:4200"
     environment:
       SERVER_PORT: 4200
       SPRING_PROFILES_ACTIVE: wahllokal3
@@ -49,8 +49,8 @@ services:
     image: rmohr/activemq:latest
     container_name: activemq
     ports:
-        - "61616:61616"   # ActiveMQ JMS port
-        - "8161:8161"     # ActiveMQ Web-Konsole
+        - "61616:61616"
+        - "8161:8161"
     environment:
         ACTIVEMQ_ADMIN_LOGIN: admin
         ACTIVEMQ_ADMIN_PASSWORD: admin
