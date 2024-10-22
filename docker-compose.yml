@@ -1,0 +1,56 @@
+version: '3'
+services:
+  zookeeper:
+    image: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: wurstmeister/kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  wahllokal1:
+    image: wahllokal  # Dein Wahllokal-Docker-Image verwenden
+    ports:
+      - "8081:4200"   # Lokales Port-Mapping (Wahllokal 1 auf Port 8081)
+    environment:
+      SERVER_PORT: 4200  # Port innerhalb des Containers
+      SPRING_PROFILES_ACTIVE: wahllokal1
+
+  wahllokal2:
+    image: wahllokal  # Dein Wahllokal-Docker-Image verwenden
+    ports:
+      - "8082:4200"   # Lokales Port-Mapping (Wahllokal 2 auf Port 8082)
+    environment:
+      SERVER_PORT: 4200
+      SPRING_PROFILES_ACTIVE: wahllokal2
+
+  wahllokal3:
+    image: wahllokal  # Dein Wahllokal-Docker-Image verwenden
+    ports:
+      - "8083:4200"   # Lokales Port-Mapping (Wahllokal 3 auf Port 8083)
+    environment:
+      SERVER_PORT: 4200
+      SPRING_PROFILES_ACTIVE: wahllokal3
+
+  activemq:
+    image: rmohr/activemq:latest
+    container_name: activemq
+    ports:
+        - "61616:61616"   # ActiveMQ JMS port
+        - "8161:8161"     # ActiveMQ Web-Konsole
+    environment:
+        ACTIVEMQ_ADMIN_LOGIN: admin
+        ACTIVEMQ_ADMIN_PASSWORD: admin
