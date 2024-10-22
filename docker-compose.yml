@@ -15,7 +15,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     volumes:
@@ -25,32 +25,52 @@ services:
     image: wahllokal
     ports:
       - "8081:4200"
+    container_name: wahllokal1
     environment:
       SERVER_PORT: 4200
       SPRING_PROFILES_ACTIVE: wahllokal1
+      KAFKA_BROKER: kafka:9092        # Ensure the Wahllokal can reach Kafka
+      ACTIVEMQ_BROKER: activemq:61616  # Ensure the Wahllokal can reach ActiveMQ
 
   wahllokal2:
     image: wahllokal
     ports:
       - "8082:4200"
+    container_name: wahllokal2
     environment:
       SERVER_PORT: 4200
       SPRING_PROFILES_ACTIVE: wahllokal2
+      KAFKA_BROKER: kafka:9092
+      ACTIVEMQ_BROKER: activemq:61616
 
   wahllokal3:
     image: wahllokal
     ports:
       - "8083:4200"
+    container_name: wahllokal3
     environment:
       SERVER_PORT: 4200
       SPRING_PROFILES_ACTIVE: wahllokal3
+      KAFKA_BROKER: kafka:9092
+      ACTIVEMQ_BROKER: activemq:61616
+
+  kafkazentrale:
+    image: kafkazentrale
+    ports:
+      - "8084:8080"
+    container_name: kafkazentrale
+    environment:
+      SERVER_PORT: 8080
+      SPRING_PROFILES_ACTIVE: kafkazentrale
+      KAFKA_BROKER: kafka:9092
+      ACTIVEMQ_BROKER: activemq:61616
 
   activemq:
     image: rmohr/activemq:latest
     container_name: activemq
     ports:
-        - "61616:61616"
-        - "8161:8161"
+      - "61616:61616"
+      - "8161:8161"
     environment:
-        ACTIVEMQ_ADMIN_LOGIN: admin
-        ACTIVEMQ_ADMIN_PASSWORD: admin
+      ACTIVEMQ_ADMIN_LOGIN: admin
+      ACTIVEMQ_ADMIN_PASSWORD: admin
